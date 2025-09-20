@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="lyra.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Lyra: Heart-Healthy Journey</title>
+  </head>
+  <body>
+
+    <div id="splash-screen" class="story-screen active">
+        <img src="h_logo.png" alt="Heart Day Logo" class="splash-logo left-logo">
+        <img src="s_logo.png" alt="Sri Sathya Sai Centenary Celebrations Logo" class="splash-logo right-logo">
+        <div class="splash-content">
+            <h2>Welcome to Your Heart-Healthy Journey!</h2>
+            <p>Discover how daily choices impact your heart's well-being.</p>
+            <div class="splash-emojis">
+                <span>🥗</span>
+                <span>🏃</span>
+                <span>💧</span>
+                <span>🥕</span>
+                <span>🍎</span>
+                <span>🚴</span>
+            </div>
+            <button id="start-game-button" class="story-button">Start Your Journey</button>
+        </div>
+    </div>
+
+    <main id="game-main-content">
+        <div id="personalization-screen" class="story-screen">
+            <h2>Let's Begin!</h2>
+            <p>First, please enter your name to personalize your journey.</p>
+            <input type="text" id="name-input" placeholder="Your Name" />
+            <p>Now, choose your avatar:</p>
+            <div class="avatar-selection">
+                <span class="avatar-emoji" data-avatar="👨">👨</span>
+                <span class="avatar-emoji" data-avatar="👩">👩</span>
+                <span class="avatar-emoji" data-avatar="🧑">🧑</span>
+            </div>
+            <button id="next-to-choices-button" class="story-button">Continue</button>
+        </div>
+
+        <div id="hydration-screen" class="story-screen">
+            <h2 id="hydration-title"></h2>
+            <p class="story-text">Your day begins. What do you drink?</p>
+            <div class="choice-options">
+                <button class="choice-button" data-choice-type="healthy" data-points="5">A glass of water 💧</button>
+                <button class="choice-button" data-choice-type="unhealthy" data-points="-5">A sugary soda 🥤</button>
+            </div>
+        </div>
+
+        <div id="exercise-screen" class="story-screen">
+            <h2 id="exercise-title"></h2>
+            <p class="story-text">It's time for some activity. What do you choose?</p>
+            <div class="choice-options">
+                <button class="choice-button" data-choice-type="healthy" data-points="5">A brisk walk 🚶</button>
+                <button class="choice-button" data-choice-type="unhealthy" data-points="-5">Watching TV 📺</button>
+            </div>
+        </div>
+
+        <div id="social-screen" class="story-screen">
+            <h2 id="social-title"></h2>
+            <p class="story-text">You're at a gathering. How do you socialize?</p>
+            <div class="choice-options">
+                <button class="choice-button" data-choice-type="healthy" data-points="5">No smoking or drinking 👍</button>
+                <button class="choice-button" data-choice-type="unhealthy" data-points="-10">A cigarette and a drink 🚬</button>
+            </div>
+        </div>
+
+        <div id="meal-selection-container" class="story-screen">
+            <h2>What meal will you build today?</h2>
+            <div class="meal-buttons-container">
+                <button class="meal-button" data-meal-type="breakfast">Breakfast</button>
+                <button class="meal-button" data-meal-type="lunch">Lunch</button>
+                <button class="meal-button" data-meal-type="dinner">Dinner</button>
+                <button class="meal-button" data-meal-type="snacks">Snacks</button>
+            </div>
+        </div>
+
+        <div id="game-container">
+            <div class="plate-area">
+                <div class="plate"></div>
+            </div>
+            <div class="food-container"></div>
+            <div class="game-info-panel">
+                <div class="score-display">
+                    <h2>Level: <span id="current-level">1</span></h2>
+                    <h2>Heart Score: <span id="current-score">0</span></h2>
+                    <div id="avatar-display">🧑</div>
+                </div>
+                <div id="nutrient-message-box"></div>
+                <div id="message-display"></div>
+                <button id="reset-button" class="story-button">Done with Meal</button>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="final-outcome-screen" class="story-screen">
+        <div class="outcome-content">
+            <h2 id="outcome-title"></h2>
+            <div id="outcome-emoji"></div>
+            <p id="outcome-message"></p>
+            <button id="play-again-button" class="story-button">Play Again</button>
+        </div>
+    </div>
+
+    <script src="lyra.js"></script>
+  </body>
+</html>
