@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'Rice': { emoji: '🍚', score: 4, nutrients: ['Carbohydrates'], benefit: "Provides energy.", fact: "Most widely consumed staple food.", significance: "Cultivation dates back to 6500 BC in India." },
     'Pongal': { emoji: '🍚', score: 8, nutrients: ['Carbohydrates', 'Protein', 'Fiber'], benefit: "A wholesome and balanced meal.", fact: "The dish is a major part of the Pongal festival.", significance: "Symbolizes abundance and a new harvest." },
     'Idiyappam': { emoji: '🍜', score: 8, nutrients: ['Carbohydrates', 'Protein'], benefit: "Light, low-fat, and easily digestible.", fact: "Mentioned in 5th-century literature.", significance: "A popular dish in South India and Sri Lanka." },
-    'Puttu': { emoji: '🪈', score: 8, nutrients: ['Carbohydrates', 'Fiber'], benefit: "Low in fat and rich in fiber.", fact: "Steamed in a cylindrical puttu maker.", significance: "A staple breakfast in Kerala." },
+    'Puttu': { emoji: '📏', score: 8, nutrients: ['Carbohydrates', 'Fiber'], benefit: "Low in fat and rich in fiber.", fact: "Steamed in a cylindrical puttu maker.", significance: "A staple breakfast in Kerala." },
     'Conjee': { emoji: '🥣', score: 7, nutrients: ['Carbohydrates', 'Protein'], benefit: "Soothing and easy on the stomach.", fact: "The name is derived from the Tamil word 'kanji'.", significance: "A common " },
     'Tomato Soup': { emoji: '🍅', score: 6, nutrients: ['Vitamins', 'Antioxidants'], benefit: "Rich in antioxidants and supports heart health.", fact: "The first recipe was published in a 1798 cookbook.", significance: "A classic comfort food around the world." },
     'Poha': { emoji: '🌾', score: 7, nutrients: ['Carbohydrates', 'Iron', 'Fiber'], benefit: "Light, low in calories, and a good probiotic.", fact: "Is a flattened rice dish.", significance: "A popular and quick breakfast option in India." },
@@ -289,4 +289,5 @@ document.addEventListener('DOMContentLoaded', () => {
         avatarEmojis.forEach(e => e.classList.remove('selected'));
         showScreen(splashScreen);
     });
+
 });
