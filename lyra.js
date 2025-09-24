@@ -25,12 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const outcomeTitle = document.getElementById('outcome-title');
     const outcomeEmoji = document.getElementById('outcome-emoji');
     const outcomeMessage = document.getElementById('outcome-message');
-    const playAgainButton = document.getElementById('play-again-button');
+    const playAgainButtons = document.querySelectorAll('.play-again-button'); // Use querySelectorAll to get all buttons with this class
     const showCalculatorButton = document.getElementById('show-calculator-button');
     const riskCalculator = document.getElementById('risk-calculator');
     const outcomeContent = document.querySelector('#final-outcome-screen .outcome-content');
     const privacyPolicyScreen = document.getElementById('privacy-policy-screen');
-    const showPrivacyPolicyButton = document.getElementById('show-privacy-policy');
+    const showPrivacyPolicyButtons = document.querySelectorAll('.show-privacy-policy'); // Use querySelectorAll
     const backToCalculatorButton = document.getElementById('back-to-calculator-button');
     const riskForm = document.getElementById("riskForm");
     const riskResult = document.getElementById("result");
@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentLevel = 1;
     let mealsBuiltCount = 0;
     let choiceCounter = 0;
+    let nutrientsTally = {};
 
     // --- Data (Food Items) ---
     const allFoodsData = {
@@ -97,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'Pop Corn': { emoji: '🍿', score: 5, nutrients: ['Fiber', 'Carbohydrates'], benefit: "A whole grain snack with good fiber.", fact: "A type of corn that expands from the kernel and puffs up when heated.", significance: "Enjoyed as a snack for thousands of years."},
         'French Fries': { emoji: '🍟', score: -8, nutrients: ['Unhealthy Fats', 'Refined Carbs'], benefit: "High in unhealthy fats and calories.", fact: "Disputed origins, but popular in the United States and France.", significance: "A popular side dish and snack worldwide."},
         'Chocolate': { emoji: '🍫', score: -6, nutrients: ['Sugar', 'Unhealthy Fats'], benefit: "Can be high in sugar and fat.", fact: "Originated from the Cacao tree in the Americas.", significance: "A popular treat and ingredient in many desserts."},
-
     };
     const mealPlateMap = {
         'breakfast': ['Dosa', 'Idly', 'Oats', 'Ragi', 'Pomegranates', 'Pongal', 'Idiyappam', 'Puttu', 'Conjee', 'Tomato Soup', 'Poha', 'Boiled egg', 'Khichdi', 'Coconut Chutney', 'Poori', 'Sandwich', 'Upma', 'Pesarattu', 'Millet Idly', 'Coconut Water'],
@@ -157,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         messageDisplay.textContent = "";
         nutrientMessageBox.innerHTML = '';
         nutrientMessageBox.style.opacity = 0;
+        nutrientsTally = { 'Carbohydrates': 0, 'Protein': 0, 'Fiber': 0, 'Vitamins': 0, 'Healthy Fats': 0, 'Sugar': 0, 'Unhealthy Fats': 0, 'Refined Carbs': 0 };
     };
 
     const updateScreenTitle = (screenElement, titleText) => {
@@ -318,20 +319,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     });
 
-    playAgainButton.addEventListener('click', () => {
-        totalHeartScore = 0;
-        mealsBuiltCount = 0;
-        userName = '';
-        avatar = '🧑';
-        choiceCounter = 0;
-        
-        resetPlateAndScore();
-        currentScoreElement.textContent = totalHeartScore;
-        avatarDisplay.textContent = '🧑';
-        currentLevelElement.textContent = '1';
-        nameInput.value = '';
-        avatarEmojis.forEach(e => e.classList.remove('selected'));
-        showScreen(splashScreen);
+    // --- New "Play Again" and "Privacy Policy" button logic ---
+    playAgainButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            totalHeartScore = 0;
+            mealsBuiltCount = 0;
+            userName = '';
+            avatar = '🧑';
+            choiceCounter = 0;
+
+            resetPlateAndScore();
+            currentScoreElement.textContent = totalHeartScore;
+            avatarDisplay.textContent = '🧑';
+            currentLevelElement.textContent = '1';
+            nameInput.value = '';
+            avatarEmojis.forEach(e => e.classList.remove('selected'));
+            showScreen(splashScreen);
+        });
     });
     
     // --- Calculator and Privacy Policy Event Listeners ---
@@ -347,13 +351,13 @@ document.addEventListener('DOMContentLoaded', () => {
         riskForm.addEventListener("submit", calculateRisk);
     }
     
-    if (showPrivacyPolicyButton) {
-        showPrivacyPolicyButton.addEventListener('click', () => {
+    showPrivacyPolicyButtons.forEach(button => {
+        button.addEventListener('click', () => {
             outcomeContent.classList.add('hidden');
             riskCalculator.classList.add('hidden');
             privacyPolicyScreen.classList.remove('hidden');
         });
-    }
+    });
 
     if (backToCalculatorButton) {
         backToCalculatorButton.addEventListener('click', () => {
