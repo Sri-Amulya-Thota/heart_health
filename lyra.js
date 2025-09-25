@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const plate = document.querySelector('.plate');
     const currentScoreElement = document.getElementById('current-score');
     const doneButton = document.getElementById('reset-button');
+    const undoButton = document.getElementById('undo-button'); 
     const messageDisplay = document.getElementById('message-display');
     const avatarDisplay = document.getElementById('avatar-display');
     const nutrientMessageBox = document.getElementById('nutrient-message-box');
@@ -25,12 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const outcomeTitle = document.getElementById('outcome-title');
     const outcomeEmoji = document.getElementById('outcome-emoji');
     const outcomeMessage = document.getElementById('outcome-message');
-    const playAgainButtons = document.querySelectorAll('.play-again-button'); // Use querySelectorAll to get all buttons with this class
+    const playAgainButtons = document.querySelectorAll('.play-again-button');
     const showCalculatorButton = document.getElementById('show-calculator-button');
     const riskCalculator = document.getElementById('risk-calculator');
     const outcomeContent = document.querySelector('#final-outcome-screen .outcome-content');
     const privacyPolicyScreen = document.getElementById('privacy-policy-screen');
-    const showPrivacyPolicyButtons = document.querySelectorAll('.show-privacy-policy'); // Use querySelectorAll
+    const showPrivacyPolicyButtons = document.querySelectorAll('.show-privacy-policy');
     const backToCalculatorButton = document.getElementById('back-to-calculator-button');
     const riskForm = document.getElementById("riskForm");
     const riskResult = document.getElementById("result");
@@ -43,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let mealsBuiltCount = 0;
     let choiceCounter = 0;
     let nutrientsTally = {};
+    let mealItems = []; 
 
     // --- Data (Food Items) ---
     const allFoodsData = {
@@ -105,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'dinner': ['Dals', 'Roti', 'Spinach & Methi', 'Gulab Jamun', 'Tomato Soup', 'Sandwich', 'Buttermilk', 'Vegetable Pulao', 'Palak Paneer', 'Cashew katli(Burfi)', 'Aloo Parata', 'Vegetable Noodles', 'Badam Milk', 'Ice Cream'],
         'snacks': ['Samosa', 'Jalebi', 'Pakora', 'Gulab Jamun', 'Almonds', 'Pomegranates', 'Bhajiya', 'Motichoor Ladoo', 'Dry fruit Laddu', 'Sandwich', 'Pani Poori', 'Vada', 'Banana', 'Pop Corn', 'French Fries', 'Chocolate', 'Vada Pav']
     };
-    
+
     // --- Core Game Functions ---
     const showScreen = (screenElement) => {
         document.querySelectorAll('.story-screen, #game-container').forEach(screen => {
@@ -158,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nutrientMessageBox.innerHTML = '';
         nutrientMessageBox.style.opacity = 0;
         nutrientsTally = { 'Carbohydrates': 0, 'Protein': 0, 'Fiber': 0, 'Vitamins': 0, 'Healthy Fats': 0, 'Sugar': 0, 'Unhealthy Fats': 0, 'Refined Carbs': 0 };
+        mealItems = [];
     };
 
     const updateScreenTitle = (screenElement, titleText) => {
@@ -218,6 +221,36 @@ document.addEventListener('DOMContentLoaded', () => {
         riskResult.innerHTML = `<h2>Result</h2><p>${message}</p><p><strong>Score:</strong> ${score} points</p>`;
     };
     
+    // --- Undo Functionality ---
+    const undoLastFoodItem = () => {
+        if (mealItems.length > 0) {
+            const lastItem = mealItems.pop();
+            lastItem.element.remove();
+            totalHeartScore -= lastItem.score;
+            currentScoreElement.textContent = totalHeartScore;
+            updateAvatarEmoji();
+            messageDisplay.textContent = "Last item undone.";
+            
+            // Re-tally nutrients after undoing
+            nutrientsTally = { 'Carbohydrates': 0, 'Protein': 0, 'Fiber': 0, 'Vitamins': 0, 'Healthy Fats': 0, 'Sugar': 0, 'Unhealthy Fats': 0, 'Refined Carbs': 0 };
+            mealItems.forEach(item => {
+                const foodData = allFoodsData[item.name];
+                if (foodData && foodData.nutrients) {
+                    foodData.nutrients.forEach(nutrient => {
+                        nutrientsTally[nutrient] = (nutrientsTally[nutrient] || 0) + 1;
+                    });
+                }
+            });
+
+            if (mealItems.length > 0) {
+                const newLastItem = mealItems[mealItems.length - 1];
+                displayFoodInfo(newLastItem.name);
+            } else {
+                nutrientMessageBox.style.opacity = 0;
+            }
+        }
+    };
+
     // --- Event Listeners (All in one place) ---
     startGameButton.addEventListener('click', () => {
         document.getElementById('game-main-content').style.display = 'block';
@@ -277,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const item = event.target.closest('.food-item');
         if (!item) { return; }
 
-        if (plate.children.length >= 6) {
+        if (mealItems.length >= 6) {
             messageDisplay.textContent = "The plate is full! Please press 'Done with Meal'.";
             return;
         }
@@ -286,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const foodName = item.dataset.foodName;
         totalHeartScore += score;
         currentScoreElement.textContent = totalHeartScore;
-        messageDisplay.textContent = ''; // Clear message if plate was full
+        messageDisplay.textContent = '';
 
         const clonedItem = item.cloneNode(true);
         clonedItem.classList.add('cloned-food-item');
@@ -294,6 +327,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const yPos = Math.random() * (plate.offsetHeight - 70);
         clonedItem.style.transform = `translate(${xPos}px, ${yPos}px)`;
         plate.appendChild(clonedItem);
+
+        mealItems.push({
+            element: clonedItem,
+            score: score,
+            name: foodName,
+        });
 
         const data = allFoodsData[foodName];
         if (data && data.nutrients) {
@@ -318,8 +357,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 3000);
     });
+    
+    // New event listener for the undo button
+    undoButton.addEventListener('click', undoLastFoodItem);
 
-    // --- New "Play Again" and "Privacy Policy" button logic ---
+    // --- "Play Again" and "Privacy Policy" button logic ---
     playAgainButtons.forEach(button => {
         button.addEventListener('click', () => {
             totalHeartScore = 0;
@@ -337,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showScreen(splashScreen);
         });
     });
-    
+
     // --- Calculator and Privacy Policy Event Listeners ---
     if (showCalculatorButton) {
         showCalculatorButton.addEventListener('click', () => {
@@ -350,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (riskForm) {
         riskForm.addEventListener("submit", calculateRisk);
     }
-    
+
     showPrivacyPolicyButtons.forEach(button => {
         button.addEventListener('click', () => {
             outcomeContent.classList.add('hidden');
